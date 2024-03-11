@@ -1,0 +1,91 @@
+module Main where
+--Exercício 1 (Útimo elemento de uma lista)
+ult :: [Integer] -> Integer
+ult [] = error "empty list"
+ult [a] = a
+ult (a:x) = ult x
+
+--Exercício 2 (Penúltimo elemento da lista)
+penult :: [Integer] -> Integer
+penult [] = error "empty list"
+penult [a, b] = a
+penult (a:x) = penult x
+
+--Exercício 3 (Segundo elemento)
+seg :: [Integer] -> Integer
+seg [] = error "empty list"
+seg (_:x:_) = x
+
+--Exercício 4 (Interseccao)
+member :: Integer -> [Integer] -> Bool
+member _ [] = False
+member elen (a:x)
+  |elen == a = True
+  |otherwise = member elen x
+
+inter :: [Integer] -> [Integer] -> [Integer]
+inter [] lista = []
+inter lista [] = []
+inter (a:x) lista 
+  | member a lista = a: inter x lista
+  | otherwise = inter x lista
+
+--Exercício 5 (Troca elemento 1 com 2, 3 com 4, 5 com 6, ...)
+troca :: [Integer] -> [Integer]
+troca [] = []
+troca [a] = [a]
+troca (a:b:x) = b:a:troca x
+
+--Exercício 6 (duplica elemento da lista)
+duplica :: [Integer] -> [Integer]
+duplica [] = []
+duplica (a:x) = a:a:duplica x
+
+-- Exercício 7 (deleta 1a ocorrência de elemento da lista)
+del1 :: Integer -> [Integer] -> [Integer]
+del1 item [] = []
+del1 item (a:x)
+  |item == a = x
+  |otherwise = a:del1 item x
+
+--Exercício 8 (deleta de 3 em 3)
+del3 :: [Integer] -> [Integer]
+del3 [] = []
+del3 (a:b:c:x) = a:b:del3 x
+
+---------- Lista de Exercícios de classe -------------
+
+--Exercício 1 (fatorial)
+fat :: Integer -> Integer
+fat 1 = 1
+fat n = fat(n - 1) * n
+
+--Exercício 2 (fibonacci)
+fib :: Integer -> Integer
+fib 0 = 0
+fib 1 = 1
+fib n = fib(n - 1) + fib(n - 2)
+
+--Exercício 3 (tamanho da lista)
+tam :: [Integer] -> Integer
+tam [] = 0
+tam (a:x) = 1 + tam x
+
+--Exercício 4 (soma da lista)
+soma :: [Integer] -> Integer
+soma [] = 0
+soma (a:x) = a + soma x
+
+--Exercício 5 (soma de duas listas)
+soma2l :: [Integer] -> [Integer] -> [Integer]
+soma2l [] [] = []
+soma2l lista [] = lista
+soma2l [] lista = lista
+soma2l (a:x) (b:y) = a + b:soma2l x y
+
+
+
+
+main :: IO ()
+main = do
+  putStrLn $ show (soma2l [1, 2, 3] [1, 2, 9, 4, 0])
