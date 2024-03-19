@@ -32,25 +32,34 @@ del_rep (a:x)
   | otherwise = [a] ++ del_rep x
   
 --Exercício 5
-len :: [Integer] -> Integer
-len [] = 0
-len (a:x) = 1 + len x
+aux :: Int -> [Int] -> [Int]
+aux _ [] = []
+aux k list = sum (take k list) : aux k (drop k list)
 
--- k, count, lista, soma do subvetor
-soma :: Integer -> Integer -> [Integer] -> Integer
-soma _ _ [] = 0
-soma k count list = 
+totk :: Int -> [Int] -> [Int]
+totk k list
+  | k <= 0 = error "k deve ser maior que 0"
+  | otherwise = aux k list
+  
+--Exercício 6
+trok2 :: [Integer] -> [Integer]
+trok2 [] = []
+trok2 [a] = [a]
+trok2 [a, b] = [b, a]
+trok2 (a:b:x) = b:a:trok2 x
 
+--Exercício 7
+aux2 :: Int -> String -> String
+aux2 _ [] = []
+aux2 k string = take (k - 1) string ++ aux2 k (drop k string)
 
-
-totk :: Integer -> [Integer] -> [Integer]
-totk _ [] = []
-totk a list = 
-
-
+delk :: Int -> String -> String
+delk k string
+  | k <= 1 = error "k deve ser maior que 1"
+  | otherwise = aux2 k string
 
 main :: IO ()
 main = do
-  putStrLn $ show (del_rep [ 3 , 1 , 2 , 1 , 2 , 3 ])
+  putStrLn $ show (delk 3 "anonimamentes")
   
   
