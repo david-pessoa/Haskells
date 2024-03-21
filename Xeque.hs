@@ -1,32 +1,30 @@
-import Data.Char (ord)
-let letras = "tcbdrpTCBDRP"
-let numeros = "12345678"
+import Data.Char (isDigit)
 
-member :: Char -> [Char] -> Bool
-member _ [] = False
-member y (a:x) = (y == a) || member y x
+-- Verifica se um caractere é um dígito
+isNumero :: Char -> Bool
+isNumero = isDigit
 
-addVazioInt :: Int -> [Char]
-addVazioInt num
-  | num <= 0 = []
-  | otherwise replicate num ' '
+-- Preenche a linha com espaços em branco
+fillWithSpaces :: Int -> String -> String
+fillWithSpaces n str = str ++ replicate (n - length str) ' '
 
-addVazio :: Char -> [Char]
-addVazio num = addVazioInt(ord num)
+-- Converte uma linha da lista para a notação Forsyth-Edwards
+lineToForsyth :: String -> String
+lineToForsyth line
+    | all isNumero line = replicate (read line) ' '
+    | otherwise = line
 
-geraVetor :: Char -> [Char] -> [Char]
-geraVetor _ [] = []
-geraVetor (a:x)
-  | (member a letras == True) = [a] ++ geraVetor x
-  | otherwise = addVazio a ++ geraVetor x
+-- Converte a lista para a matriz na notação Forsyth-Edwards
+listToMatrixForsyth :: [String] -> [String]
+listToMatrixForsyth [] = []
+listToMatrixForsyth (x:xs) = lineToForsyth x : listToMatrixForsyth xs
 
-genMatriz :: [String] -> [String]
-genMatriz (a:x) = geraVetor(take a) a ++ geraMatriz x
-
-
-
-
+-- Imprime a matriz na notação Forsyth-Edwards
+printMatrixForsyth :: [String] -> IO ()
+printMatrixForsyth = mapM_ putStrLn
 
 main :: IO ()
 main = do
-  putStrLn $ show (genMatriz ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"])
+    let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
+        matriz = listToMatrixForsyth lista
+    printMatrixForsyth matriz
