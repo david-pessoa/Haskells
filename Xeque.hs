@@ -23,15 +23,23 @@ listToMatrixForsyth (x:xs) = lineToForsyth x : listToMatrixForsyth xs
 printMatrixForsyth :: [String] -> IO ()
 printMatrixForsyth = mapM_ putStrLn
 
-----ENCONTRAR O REI BRANCO 'r'--------
+findKinginLine :: Int -> Int -> [Char] -> [Int]
+findKinginLine _ _ [] = [-1, -1]
+findKinginLine i j (a:x)
+  | a == 'r' = [i, j]
+  | otherwise findKinginLine i (j + 1) x
 
---fazer uma função que recebe a matriz e retorna vetor [Int] (com a localização do rei)
--- a função chama oito vezes uma segunda função que percorrerá cada linha da matriz
--- até achar o rei. Quando achar retorna a posição
+----ENCONTRAR O REI BRANCO 'r'--------
+findWhiteKing :: Int -> [String] -> [Int]
+findWhiteKing _ [] = [-1, -1] -- Retorna [-1, -1] se o rei não for encontrado na matriz
+findWhiteKing i (l1:x)
+    | findKinginLine (i + 1) 0 l1 /= [-1, -1] = findKinginLine (i + 1) 0 l1 -- Retorna a posição do rei se encontrado em uma linha
+    | otherwise = findWhiteKing (i + 1) x -- Continua procurando na próxima linha
 
 main :: IO ()
 main = do
     let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
         matriz = listToMatrixForsyth lista
     printMatrixForsyth matriz
+    findWhiteKing (-1) matriz
     
