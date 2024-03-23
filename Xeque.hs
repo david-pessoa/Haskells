@@ -23,8 +23,15 @@ listToMatrixForsyth (x:xs) = lineToForsyth x : listToMatrixForsyth xs
 printMatrixForsyth :: [String] -> IO ()
 printMatrixForsyth = mapM_ putStrLn
 
+----ENCONTRAR O REI BRANCO 'r'--------
+
+--fazer uma função que recebe a matriz e retorna vetor [Int] (com a localização do rei)
+-- a função chama oito vezes uma segunda função que percorrerá cada linha da matriz
+-- até achar o rei. Quando achar retorna a posição
+
 main :: IO ()
 main = do
     let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
         matriz = listToMatrixForsyth lista
     printMatrixForsyth matriz
+    
