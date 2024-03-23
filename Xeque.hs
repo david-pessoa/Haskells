@@ -27,19 +27,23 @@ findKinginLine :: Int -> Int -> [Char] -> [Int]
 findKinginLine _ _ [] = [-1, -1]
 findKinginLine i j (a:x)
   | a == 'r' = [i, j]
-  | otherwise findKinginLine i (j + 1) x
+  | otherwise = findKinginLine i (j + 1) x
 
 ----ENCONTRAR O REI BRANCO 'r'--------
 findWhiteKing :: Int -> [String] -> [Int]
 findWhiteKing _ [] = [-1, -1] -- Retorna [-1, -1] se o rei não for encontrado na matriz
 findWhiteKing i (l1:x)
-    | findKinginLine (i + 1) 0 l1 /= [-1, -1] = findKinginLine (i + 1) 0 l1 -- Retorna a posição do rei se encontrado em uma linha
+    | kingPos /= [-1, -1] = kingPos -- Retorna a posição do rei se encontrado em uma linha
     | otherwise = findWhiteKing (i + 1) x -- Continua procurando na próxima linha
+    where
+      kingPos = findKinginLine (i + 1) 0 l1
 
 main :: IO ()
 main = do
     let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
         matriz = listToMatrixForsyth lista
+        whiteKingPos = findWhiteKing (-1) matriz
     printMatrixForsyth matriz
-    findWhiteKing (-1) matriz
+    
+    putStrLn $ "\nPosição do rei branco: " ++ show (whiteKingPos)
     
