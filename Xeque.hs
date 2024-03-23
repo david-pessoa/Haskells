@@ -4,15 +4,19 @@ import Data.Char (isDigit)
 isNumero :: Char -> Bool
 isNumero = isDigit
 
+toInt :: Char -> Int
+toInt s = read [s]
+
 -- Preenche a linha com espaços em branco
 fillWithSpaces :: Int -> String -> String
 fillWithSpaces n str = str ++ replicate (n - length str) ' '
 
 -- Converte uma linha da lista para a notação Forsyth-Edwards
 lineToForsyth :: String -> String
-lineToForsyth line
-    | all isNumero line = replicate (read line) ' '
-    | otherwise = line
+lineToForsyth [] = []
+lineToForsyth (a:x)
+    | isNumero a = replicate (toInt a) ' ' ++ lineToForsyth x
+    | otherwise = a : lineToForsyth x
 
 -- Converte a lista para a matriz na notação Forsyth-Edwards
 listToMatrixForsyth :: [String] -> [String]
