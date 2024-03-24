@@ -7,10 +7,6 @@ isNumero = isDigit
 toInt :: Char -> Int
 toInt s = read [s]
 
--- Preenche a linha com espaços em branco
-fillWithSpaces :: Int -> String -> String
-fillWithSpaces n str = str ++ replicate (n - length str) ' '
-
 -- Converte uma linha da lista para a notação Forsyth-Edwards
 lineToForsyth :: String -> String
 lineToForsyth [] = []
@@ -42,6 +38,61 @@ findWhiteKing i (l1:x)
     where
       kingPos = findKinginLine (i + 1) 0 l1
 
+isPosNull :: [Int] -> Bool
+isPosNull num
+  | num == [-1, -1] = True
+  | otherwise = False
+
+--ENCONTRA TORRE OU RAINHA NA VERTICAL E HORIZONTAL
+sobe :: Int -> Int -> [String] -> Bool
+sobe x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | otherwise = sobe (x + 1) y matriz
+
+desce :: Int -> Int -> [String] -> Bool
+desce x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | otherwise = desce (x - 1) y matriz
+
+direita :: Int -> Int -> [String] -> Bool
+direita x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | otherwise = direita x (y + 1) matriz
+
+esquerda :: Int -> Int -> [String] -> Bool
+esquerda x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | otherwise = esquerda x (y - 1) matriz
+
+findReto :: [Int] -> [String] -> Bool
+findReto (x:y:_) matriz = sobe (x + 1) y matriz || desce (x - 1) y matriz || direita x (y + 1) matriz ||esquerda x (y - 1) matriz
+
+--ENCONTRA BISPOS OU RAINHA NAS DIAGONAIS
+--findDiagonal :: [Int] -> [String] -> Bool
+--findDiagonal
+
+--ENCONTRA CAVALO
+encontraCavalo :: Int -> Int -> [String] -> Bool
+encontraCavalo x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'C' = True
+  | otherwise = False
+
+findHorse :: [Int] -> [String] -> Bool
+findHorse (x:y:_) matriz = encontraCavalo (x - 2) (y + 1) matriz || encontraCavalo (x - 1) (y + 2) matriz || encontraCavalo (x + 1) (y + 2) matriz || encontraCavalo (x + 2) (y + 1) matriz || encontraCavalo (x + 2) (y - 1) matriz || encontraCavalo (x + 1) (y - 2) matriz || encontraCavalo (x - 1) (y - 2) matriz || encontraCavalo (x - 2) (y - 1) matriz
+
+--ENCONTRA PEÃO
+
+
+
 main :: IO ()
 main = do
     let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
@@ -49,5 +100,19 @@ main = do
         whiteKingPos = findWhiteKing (-1) matriz
     printMatrixForsyth matriz
     
+    --Verifica se tem rei no tabuleiro
+    if isPosNull whiteKingPos then
+      putStrLn $ "False"
+      
+    --Verifica se há um cavalo que possa dar xeque  
+    else if findHorse whiteKingPos matriz then
+      putStrLn $ "True"
+    
+    --Verifica se há uma peça que possa dar xeque na horizontal ou vertical
+    else if findReto whiteKingPos matriz then
+      putStrLn $ "True"
+    
+    else
+      putStrLn $ "False"
     putStrLn $ "\nPosição do rei branco: " ++ show (whiteKingPos)
     
