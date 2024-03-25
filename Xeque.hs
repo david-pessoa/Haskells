@@ -48,36 +48,64 @@ sobe :: Int -> Int -> [String] -> Bool
 sobe x y matriz
   | x >= 8 || x < 0 || y >= 8 || y < 0 = False
   | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
-  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
   | otherwise = sobe (x + 1) y matriz
 
 desce :: Int -> Int -> [String] -> Bool
 desce x y matriz
   | x >= 8 || x < 0 || y >= 8 || y < 0 = False
   | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
-  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
   | otherwise = desce (x - 1) y matriz
 
 direita :: Int -> Int -> [String] -> Bool
 direita x y matriz
   | x >= 8 || x < 0 || y >= 8 || y < 0 = False
   | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
-  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
   | otherwise = direita x (y + 1) matriz
 
 esquerda :: Int -> Int -> [String] -> Bool
 esquerda x y matriz
   | x >= 8 || x < 0 || y >= 8 || y < 0 = False
   | matriz !! x !! y == 'T' || matriz !! x !! y == 'R' = True
-  | matriz !! x !! y /= ' ' && matriz !! x !! y /= ' ' = False
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
   | otherwise = esquerda x (y - 1) matriz
 
 findReto :: [Int] -> [String] -> Bool
 findReto (x:y:_) matriz = sobe (x + 1) y matriz || desce (x - 1) y matriz || direita x (y + 1) matriz ||esquerda x (y - 1) matriz
 
 --ENCONTRA BISPOS OU RAINHA NAS DIAGONAIS
---findDiagonal :: [Int] -> [String] -> Bool
---findDiagonal
+nordeste :: Int -> Int -> [String] -> Bool
+nordeste x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'B' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
+  | otherwise = nordeste (x - 1) (y + 1) matriz
+
+sudeste :: Int -> Int -> [String] -> Bool
+sudeste x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'B' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
+  | otherwise = sudeste (x + 1) (y + 1) matriz
+
+sudoeste :: Int -> Int -> [String] -> Bool
+sudoeste x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'B' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
+  | otherwise = sudoeste (x + 1) (y - 1) matriz
+  
+noroeste :: Int -> Int -> [String] -> Bool
+noroeste x y matriz
+  | x >= 8 || x < 0 || y >= 8 || y < 0 = False
+  | matriz !! x !! y == 'B' || matriz !! x !! y == 'R' = True
+  | matriz !! x !! y /= 'o' && matriz !! x !! y /= 'o' = False
+  | otherwise = noroeste (x - 1) (y - 1) matriz
+
+findDiagonal :: [Int] -> [String] -> Bool
+findDiagonal (x:y:_) matriz = nordeste (x - 1) (y + 1) matriz || sudeste (x + 1) (y + 1) matriz || sudoeste (x + 1) (y - 1) matriz || noroeste (x - 1) (y - 1) matriz
 
 --ENCONTRA CAVALO
 encontraCavalo :: Int -> Int -> [String] -> Bool
@@ -92,11 +120,12 @@ findHorse (x:y:_) matriz = encontraCavalo (x - 2) (y + 1) matriz || encontraCava
 --ENCONTRA PEÃO
 
 
+
 --PEÇAS BRANCAS: minúsculas
 --PEÇAS PRETAS: MAIÚSCULAS
 main :: IO ()
 main = do
-    let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
+    let lista = ["tcbdrbct","pppppppp","oooooooo","oooooooo","oooooooo","oooooooo","PPPPPPPP","TCBDRBCT"]
         matriz = listToMatrixForsyth lista
         whiteKingPos = findWhiteKing (-1) matriz
     printMatrixForsyth matriz
@@ -111,6 +140,9 @@ main = do
     
     --Verifica se há uma peça que possa dar xeque na horizontal ou vertical
     else if findReto whiteKingPos matriz then
+      putStrLn $ "True"
+    
+    else if findDiagonal whiteKingPos matriz then
       putStrLn $ "True"
     
     else
