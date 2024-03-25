@@ -1,4 +1,8 @@
+--David Varão Lima Bentes Pessoa
+--RA: 10402647
+
 import Data.Char (isDigit)
+import Data.List.Split (splitOn)
 
 -- Verifica se um caractere é um dígito
 isNumero :: Char -> Bool
@@ -20,7 +24,7 @@ listToMatrixForsyth :: [String] -> [String]
 listToMatrixForsyth [] = []
 listToMatrixForsyth (x:xs) = lineToForsyth x : listToMatrixForsyth xs
 
--- Imprime a matriz na notação Forsyth-Edwards
+-- Imprime a matriz em forma de tabuleiro
 printMatrixForsyth :: [String] -> IO ()
 printMatrixForsyth = mapM_ putStrLn
 
@@ -151,10 +155,10 @@ findPeao (x:y:_) matriz = encontraPeao (x - 1) (y + 1) matriz || encontraPeao (x
 main :: IO ()
 main = do
     entrada <- getLine
-    let lista = words entrada--["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
-        matriz = listToMatrixForsyth lista
-        whiteKingPos = findWhiteKing (-1) matriz
-    printMatrixForsyth matriz
+    let lista = read entrada :: [String] --["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
+        matriz = listToMatrixForsyth lista -- transforma notação de Forsyth-Edwards para uma matriz como um tabuleiro
+        whiteKingPos = findWhiteKing (-1) matriz --Econtra o rei branco
+    --printMatrixForsyth matriz 
     
     --Verifica se tem rei no tabuleiro
     if isPosNull whiteKingPos then
@@ -178,4 +182,3 @@ main = do
       
     else
       putStrLn $ "False"
-    
