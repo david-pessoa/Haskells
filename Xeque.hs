@@ -92,7 +92,8 @@ findHorse (x:y:_) matriz = encontraCavalo (x - 2) (y + 1) matriz || encontraCava
 --ENCONTRA PEÃO
 
 
-
+--PEÇAS BRANCAS: minúsculas
+--PEÇAS PRETAS: MAIÚSCULAS
 main :: IO ()
 main = do
     let lista = ["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]
