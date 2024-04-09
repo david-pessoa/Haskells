@@ -46,13 +46,23 @@ quickSort (p:xs) = quickSort lesser ++ [p] ++ quickSort greater
         greater = filter (>= p) xs
 
 -----------------------Árvore em Haskell----------------------------
-data Tree = N Int Tree Tree | F Int --Criando estrutura de dados Tree
+data Tree = N Int Tree Tree | F Int | EmptyTree --Criando estrutura de dados Tree
   deriving (Show, Eq)
 
 -- Criando uma árvore
 t1 = N 1
          (N 2 (N 3 (F 4) (F 4)) (F 3))
          (N 2 (F 3) (F 3))
+
+insere :: Int -> Tree -> Tree
+insere a (F n)
+    | a > n = N n (EmptyTree) (F a)
+    | otherwise = N n (F a) (EmptyTree)
+insere a (N n te td)
+    | a > n = N n te (insere a td)
+    | otherwise = N n (insere a te) td
+insere a EmptyTree = (F a)
+
 
 -- Pré Ordem
 pre (F n) = [n]
